@@ -45,6 +45,8 @@ public class CropService {
         e.getId(),
         e.getName(),
         e.getPlantedArea(),
+        e.getPlantedDate(),
+        e.getHarvestDate(),
         e.getFarm().getId())).toList();
   }
 
@@ -58,6 +60,8 @@ public class CropService {
         e.getId(),
         e.getName(),
         e.getPlantedArea(),
+        e.getPlantedDate(),
+        e.getHarvestDate(),
         e.getFarm().getId())).toList();
   }
 
@@ -68,7 +72,8 @@ public class CropService {
    */
   public Optional<CropDto> getCropById(Integer id) {
     return cropRepository.findById(id)
-        .map(e -> new CropDto(e.getId(), e.getName(), e.getPlantedArea(), e.getFarm().getId()))
+        .map(e -> new CropDto(e.getId(), e.getName(), e.getPlantedArea(),
+            e.getPlantedDate(), e.getHarvestDate(), e.getFarm().getId()))
         .map(Optional::of)
         .orElseThrow(() -> new CropNotFoundException("Plantação não encontrada!"));
   }
