@@ -33,7 +33,7 @@ import org.springframework.web.context.WebApplicationContext;
 @DisplayName("Req 01")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @Execution(ExecutionMode.CONCURRENT)
-class FarmManagementTest {
+public class FarmManagementTest {
 
   MockMvc mockMvc;
 
