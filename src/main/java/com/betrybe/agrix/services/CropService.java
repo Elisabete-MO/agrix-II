@@ -2,9 +2,12 @@ package com.betrybe.agrix.services;
 
 import com.betrybe.agrix.controllers.dto.CropDto;
 import com.betrybe.agrix.exceptions.CropNotFoundException;
+import com.betrybe.agrix.exceptions.FertilizerNotFoundException;
 import com.betrybe.agrix.models.entities.Crop;
 import com.betrybe.agrix.models.entities.Farm;
+import com.betrybe.agrix.models.entities.Fertilizer;
 import com.betrybe.agrix.models.repositories.CropRepository;
+import com.betrybe.agrix.models.repositories.FertilizerRepository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -18,10 +21,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class CropService {
   private final CropRepository cropRepository;
+  private final FertilizerRepository fertilizerRepository;
 
   @Autowired
-  public CropService(CropRepository cropRepository) {
+  public CropService(CropRepository cropRepository, FertilizerRepository fertilizerRepository) {
     this.cropRepository = cropRepository;
+    this.fertilizerRepository = fertilizerRepository;
   }
 
   /** Creates a new crop.
@@ -96,5 +101,24 @@ public class CropService {
             e.getPlantedArea(), e.getPlantedDate(),
             e.getHarvestDate(), e.getFarm().getId()))
         .collect(Collectors.toList()));
+  }
+
+  /** Adds a fertilizer to a crop.
+   *
+   * @param cropId The crop id.
+   * @param fertilizerId The fertilizer id.
+   * @return The crop with the fertilizer added.
+   */
+  public Crop addFertilizerToCrop(Integer cropId, Integer fertilizerId) {
+    Crop crop = cropRepository.findById(cropId)
+        .orElseThrow(() -> new CropNotFoundException("Plantação não encontrada!"));
+    Fertilizer fertilizer = fertilizerRepository.findById(fertilizerId)
+        .orElseThrow(() -> new FertilizerNotFoundException("Fertilizante não encontrado!"));
+
+    fertilizer.getCrops().add(crop);
+    crop.getFertilizers().add(fertilizer);
+
+    fertilizerRepository.save(fertilizer);
+    return cropRepository.save(crop);
   }
 }

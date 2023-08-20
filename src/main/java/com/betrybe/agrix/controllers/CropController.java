@@ -6,9 +6,11 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,10 +29,6 @@ public class CropController {
     this.cropService = cropService;
   }
 
-  /** Gets all the crops.
-   *
-   * @return A list with all the crops.
-   */
   @GetMapping()
   public ResponseEntity<List<CropDto>> getAllCrops() {
     return ResponseEntity.ok(cropService.getAllCrops());
@@ -47,5 +45,19 @@ public class CropController {
       @RequestParam LocalDate start, @RequestParam LocalDate end) {
     Optional<List<CropDto>> optionalCrop = cropService.getCropByHarvestDate(start, end);
     return ResponseEntity.ok(optionalCrop);
+  }
+
+  /** Associates a fertilizer to a crop.
+   *
+   * @param cropId identifier of the crop
+   * @param fertilizerId identifier of the fertilizer
+   * @return A message with the success of the operation.
+   */
+  @PostMapping("/{cropId}/fertilizers/{fertilizerId}")
+  public ResponseEntity<String> addFertilizerToCrop(@PathVariable Integer cropId,
+                                                    @PathVariable Integer fertilizerId) {
+    cropService.addFertilizerToCrop(cropId, fertilizerId);
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body("Fertilizante e plantação associados com sucesso!");
   }
 }
