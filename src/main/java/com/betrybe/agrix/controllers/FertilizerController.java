@@ -2,9 +2,11 @@ package com.betrybe.agrix.controllers;
 
 import com.betrybe.agrix.controllers.dto.FertilizerDto;
 import com.betrybe.agrix.services.FertilizerService;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,10 +32,10 @@ public class FertilizerController {
     return ResponseEntity.status(HttpStatus.CREATED).body(newFertilizer);
   }
 
-  //  @GetMapping()
-  //  public ResponseEntity<List<FertilizerDto>> getAllFertilizers() {
-  //    return ResponseEntity.ok(fertilizerService.getAllFertilizers());
-  //  }
+  @GetMapping()
+  public ResponseEntity<List<FertilizerDto>> getAllFertilizers() {
+    return ResponseEntity.ok(fertilizerService.getAllFertilizers());
+  }
 
   //  @GetMapping("/{id}")
   //  public ResponseEntity<Optional<FertilizerDto>> getFertilizerById(@PathVariable Integer id) {

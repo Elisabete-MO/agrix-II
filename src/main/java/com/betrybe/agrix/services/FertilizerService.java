@@ -1,7 +1,9 @@
 package com.betrybe.agrix.services;
 
+import com.betrybe.agrix.controllers.dto.FarmDto;
 import com.betrybe.agrix.controllers.dto.FertilizerDto;
 import com.betrybe.agrix.exceptions.FertilizerNotFoundException;
+import com.betrybe.agrix.models.entities.Farm;
 import com.betrybe.agrix.models.entities.Fertilizer;
 import com.betrybe.agrix.models.repositories.FertilizerRepository;
 import java.time.LocalDate;
@@ -32,5 +34,18 @@ public class FertilizerService {
     Fertilizer fertilizer = fertilizerDto.toFertilizer();
     Fertilizer insertedFertilizer = fertilizerRepository.save(fertilizer);
     return FertilizerDto.fromFertilizer(insertedFertilizer);
+  }
+
+  /** Gets all fertilizers.
+   *
+   * @return All the fertilizers.
+   */
+  public List<FertilizerDto> getAllFertilizers() {
+    List<Fertilizer> fertilizers = fertilizerRepository.findAll();
+    return fertilizers.stream().map(e -> new FertilizerDto(
+        e.getId(),
+        e.getName(),
+        e.getBrand(),
+        e.getComposition())).toList();
   }
 }
