@@ -5,8 +5,10 @@ import com.betrybe.agrix.exceptions.CropNotFoundException;
 import com.betrybe.agrix.models.entities.Crop;
 import com.betrybe.agrix.models.entities.Farm;
 import com.betrybe.agrix.models.repositories.CropRepository;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -76,5 +78,23 @@ public class CropService {
             e.getPlantedDate(), e.getHarvestDate(), e.getFarm().getId()))
         .map(Optional::of)
         .orElseThrow(() -> new CropNotFoundException("Plantação não encontrada!"));
+  }
+
+  /** Gets a crop by harvest date.
+   *
+   * @param start The start harvest date.
+   * @param end The end harvest date.
+   * @return The crop with the given harvest date.
+   */
+  public Optional<List<CropDto>> getCropByHarvestDate(LocalDate start, LocalDate end) {
+    List<Crop> crops = cropRepository.findByHarvestDateBetween(start, end);
+
+    if (crops.isEmpty()) {
+      throw new CropNotFoundException("Nenhuma plantação encontrada!");
+    }
+    return Optional.of(crops.stream().map(e -> new CropDto(e.getId(), e.getName(),
+            e.getPlantedArea(), e.getPlantedDate(),
+            e.getHarvestDate(), e.getFarm().getId()))
+        .collect(Collectors.toList()));
   }
 }
