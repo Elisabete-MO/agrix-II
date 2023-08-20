@@ -1,15 +1,11 @@
 package com.betrybe.agrix.services;
 
-import com.betrybe.agrix.controllers.dto.FarmDto;
 import com.betrybe.agrix.controllers.dto.FertilizerDto;
 import com.betrybe.agrix.exceptions.FertilizerNotFoundException;
-import com.betrybe.agrix.models.entities.Farm;
 import com.betrybe.agrix.models.entities.Fertilizer;
 import com.betrybe.agrix.models.repositories.FertilizerRepository;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,5 +43,18 @@ public class FertilizerService {
         e.getName(),
         e.getBrand(),
         e.getComposition())).toList();
+  }
+
+  /** Gets a fertilizer by id.
+   *
+   * @param id The fertilizer id.
+   * @return The fertilizer with the given id.
+   */
+  public Optional<FertilizerDto> getFertilizerById(Integer id) {
+    return fertilizerRepository.findById(id)
+        .map(e -> new FertilizerDto(e.getId(), e.getName(),
+            e.getBrand(), e.getComposition()))
+        .map(Optional::of)
+        .orElseThrow(() -> new FertilizerNotFoundException("Fertilizante não encontrado!"));
   }
 }
